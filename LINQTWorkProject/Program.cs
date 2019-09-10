@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Linq;
 using CSharptoSQLProjectLibrary;
+using ExtensionMethods;
+
 namespace LINQTWorkProject {
     
-
+    class State {
+        public string Code { get; set; }
+        public string Name { get; set; }
+    }
     class Program {
 
         void Run() {
@@ -11,16 +16,65 @@ namespace LINQTWorkProject {
             var conn = new Connection(@"localhost\sqlexpress", "PRS");
             conn.Open();
             Users.Connection = conn;
+            Vendors.Connection = conn;
+            Products.Connection = conn;
 
-            
-
-            var user = from u in Users.GetAll()
-                         where u.IsReviewer
-                         select u;
-
-            foreach(var u in user) {
-                Console.WriteLine($"{u} ");
+            var products = Products.GetAll();
+            foreach(var product in products) {
+                product.PrintBrief();
             }
+
+
+            //var states = new State[] {
+            //    new State() { Code = "OH", Name = "Ohio"},
+            //    new State() { Code = "IN", Name = "Indiana" },
+            //    new State() { Code = "Il", Name = "Illinois" },
+            //};
+
+
+            //var vendorsWithState = from v in Vendors.GetAll()
+            //                       join s in states on v.State equals s.Code
+            //                       select new {
+            //                           Vendor = v.Name, State = s.Name
+            //                       };
+            //foreach(var v in vendorsWithState) {
+            //    Console.WriteLine($"Vendor {v.Vendor} is in {v.State}");
+            //}
+            //var products = from p in Products.GetAll()
+            //               join v in Vendors.GetAll()
+            //               on p.VendorId equals v.Id
+            //               select new {
+            //                   Product = p.Name,
+            //                   Price = p.Price,
+            //                   Vendor = v.Name
+            //               };
+            //foreach (var p in products) {
+            //    Console.WriteLine($"{p.Product} priced at {p.Price} is from {p.Vendor}");
+            //}
+
+            //var productstotal = (from prod in Products.GetAll()
+            //                select prod.Price);
+            //var sumprice = productstotal.Sum(prod=>prod);
+            //Console.WriteLine($"Sum is {sumprice}");
+
+
+            //var vendors = from v in Vendors.GetAll()
+            //              where v.Code.Equals("ABC00")
+            //              orderby v.Name descending
+            //              select v;
+            //foreach (var v in vendors) {
+            //    Console.WriteLine($"{v}");
+            //}
+
+
+
+            //var user = from u in Users.GetAll()
+            //           where u.IsReviewer
+            //           select u;
+
+            //foreach(var u in user) {
+            //    Console.WriteLine($"{u} ");
+            //}
 
             conn.Close();
 
